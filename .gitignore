@@ -1,0 +1,10 @@
+# 빌드 결과물
+target/
+bin/
+
+# 인증키 (각자 api.properties.example 을 복사해서 만들기)
+src/main/resources/api.properties
+
+# 이클립스 개인 설정
+.metadata/
+*.log
