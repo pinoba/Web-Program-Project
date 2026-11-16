@@ -15,7 +15,9 @@ public class Config {
     public static final int API_PAGE_SIZE = 1000; // 한 번에 받을 건수 (API 최대 1000)
 
     // H2 내장형 DB 파일 위치 (~ 는 사용자 홈 폴더, 예: C:\Users\이름\bapsim)
-    public static final String DB_URL = "jdbc:h2:~/bapsim/bapsimdb;MODE=MySQL;AUTO_SERVER=TRUE";
+    // DB_CLOSE_DELAY=-1: 서버가 켜져 있는 동안 DB 를 열어 둠.
+    //   (없으면 요청마다 DB 를 다시 열어서 AUTO_SERVER 준비에 매번 약 5초가 걸림)
+    public static final String DB_URL = "jdbc:h2:~/bapsim/bapsimdb;MODE=MySQL;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1";
     public static final String DB_USER = "sa";
     public static final String DB_PASSWORD = "";
 

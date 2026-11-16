@@ -44,13 +44,6 @@
       <h2 class="panel-title">영양 정보 <span class="muted small">성인 1일 기준치 대비</span></h2>
       <c:set var="n" value="${recipe}" />
       <%@ include file="inc/nutritionBars.jsp" %>
-      <c:if test="${recipe.kcalMismatch}">
-        <p class="warn-note">
-          ⚠ 표기 열량(<fmt:formatNumber value="${recipe.kcal}" maxFractionDigits="1" />kcal)과
-          탄수화물·단백질·지방으로 환산한 열량(약 <fmt:formatNumber value="${recipe.calcKcal}" maxFractionDigits="0" />kcal)이
-          크게 다릅니다. 원자료 값을 그대로 표시합니다.
-        </p>
-      </c:if>
     </section>
 
     <section class="panel">

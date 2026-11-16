@@ -44,7 +44,6 @@
     document.getElementById('stInserted').textContent = s.inserted.toLocaleString();
     document.getElementById('stUpdated').textContent = s.updated.toLocaleString();
     document.getElementById('stFailed').textContent = s.failed.toLocaleString();
-    document.getElementById('stMismatch').textContent = s.mismatch.toLocaleString();
   }
 
   // 화면을 다시 열었을 때 적재가 진행 중이면 이어서 표시

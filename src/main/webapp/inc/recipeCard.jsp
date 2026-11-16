@@ -12,5 +12,13 @@
   <div class="card-body">
     <h3 class="card-title"><c:out value="${r.name}" /></h3>
     <p class="card-kcal"><fmt:formatNumber value="${r.kcal}" maxFractionDigits="1" /> kcal</p>
+    <c:if test="${not empty r.matchedIngredients}">
+      <div class="matched">
+        <span class="matched-label">포함 재료</span>
+        <c:forEach var="ing" items="${r.matchedIngredients}">
+          <span class="chip chip-ing"><c:out value="${ing}" /></span>
+        </c:forEach>
+      </div>
+    </c:if>
   </div>
 </a>

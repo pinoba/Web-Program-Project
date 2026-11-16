@@ -27,14 +27,14 @@ public class RecipeLoader {
     private static volatile boolean running;
     private static volatile boolean done;
     private static volatile String message = "아직 적재하지 않았습니다.";
-    private static volatile int total, processed, inserted, updated, failed, mismatch;
+    private static volatile int total, processed, inserted, updated, failed;
 
     /** 적재 시작. 이미 실행 중이면 false */
     public static synchronized boolean start() {
         if (running) return false;
         running = true;
         done = false;
-        total = processed = inserted = updated = failed = mismatch = 0;
+        total = processed = inserted = updated = failed = 0;
         message = "API 호출 준비 중...";
 
         Thread thread = new Thread(() -> run(), "bapsim-recipe-loader");
@@ -57,7 +57,7 @@ public class RecipeLoader {
              + ",\"message\":" + JsonUtil.quote(message)
              + ",\"total\":" + total + ",\"processed\":" + processed
              + ",\"inserted\":" + inserted + ",\"updated\":" + updated
-             + ",\"failed\":" + failed + ",\"mismatch\":" + mismatch
+             + ",\"failed\":" + failed
              + ",\"recipeCount\":" + recipeCount + "}";
     }
 
@@ -65,7 +65,6 @@ public class RecipeLoader {
     public static int getInserted() { return inserted; }
     public static int getUpdated() { return updated; }
     public static int getFailed() { return failed; }
-    public static int getMismatch() { return mismatch; }
 
     private static void run() {
         try {
@@ -83,13 +82,20 @@ public class RecipeLoader {
                 int start = 1;
                 do {
                     int end = start + pageSize - 1;
-                    message = String.format("API 호출 중 (%,d~%,d건)", start, end);
+                    message = String.format("API 호출 중 (%,d~%,d건)", start, total > 0 ? Math.min(end, total) : end);
                     Element root = fetch(key, start, end);
 
                     if (total == 0) total = parseInt(RecipeParser.text(root, "total_count"));
                     if (total == 0) throw new IllegalStateException("API 에서 받은 레시피가 없습니다.");
 
+                    // API 가 가끔 일부만 돌려주는 경우가 있어서, 받아야 할 건수보다 적으면 최대 2번 다시 요청
+                    int expected = Math.min(end, total) - start + 1;
                     NodeList rows = root.getElementsByTagName("row");
+                    for (int retry = 1; retry <= 2 && rows.getLength() < expected; retry++) {
+                        message = String.format("API 응답이 %,d건뿐이라 다시 요청 중 (%d번째)", rows.getLength(), retry);
+                        root = fetch(key, start, end);
+                        rows = root.getElementsByTagName("row");
+                    }
                     for (int i = 0; i < rows.getLength(); i++) {
                         saveOne(conn, dao, (Element) rows.item(i));
                     }
@@ -97,7 +103,9 @@ public class RecipeLoader {
                     start = end + 1;
                 } while (start <= total);
             }
-            message = "적재 완료";
+            message = processed < total
+                    ? String.format("적재 완료 (API 에서 %,d건 중 %,d건만 받음 - 다시 실행해 주세요)", total, processed)
+                    : "적재 완료";
         } catch (Exception e) {
             message = "적재 실패: " + e.getMessage();
         } finally {
@@ -109,13 +117,17 @@ public class RecipeLoader {
     private static void saveOne(Connection conn, RecipeSaveDAO dao, Element row) {
         try {
             Recipe recipe = RecipeParser.toRecipe(row);
-            boolean isNew = dao.save(recipe);
+            List<String> ingredients = RecipeParser.parseIngredientNames(recipe.getPartsRaw());
+            boolean isNew = dao.save(recipe, ingredients);
             conn.commit();
             if (isNew) inserted++; else updated++;
-            if (recipe.isKcalMismatch()) mismatch++;
         } catch (Exception e) {
             DBUtil.rollback(conn);
             failed++;
+            try {
+                dao.reloadIngredientCache();
+            } catch (Exception ignore) {
+            }
         } finally {
             processed++;
             message = String.format("%,d / %,d건 저장 중", processed, total);

@@ -15,8 +15,20 @@ CREATE TABLE IF NOT EXISTS recipe (
     img_main      VARCHAR(500),             -- ATT_FILE_NO_MAIN
     parts_raw     CLOB,                     -- RCP_PARTS_DTLS 원문 (분량·그룹 포함)
     tip           CLOB,                     -- RCP_NA_TIP 저감 팁
-    kcal_mismatch BOOLEAN DEFAULT FALSE,    -- 표기 열량과 탄단지 환산 열량 차이가 큰지
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ingredient (
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS recipe_ingredient (
+    recipe_id     INT NOT NULL,
+    ingredient_id INT NOT NULL,
+    PRIMARY KEY (recipe_id, ingredient_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipe(id) ON DELETE CASCADE,
+    FOREIGN KEY (ingredient_id) REFERENCES ingredient(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS recipe_step (
@@ -48,3 +60,4 @@ CREATE TABLE IF NOT EXISTS favorite (
 
 CREATE INDEX IF NOT EXISTS idx_recipe_name ON recipe(name);
 CREATE INDEX IF NOT EXISTS idx_recipe_category ON recipe(category);
+CREATE INDEX IF NOT EXISTS idx_ri_ingredient ON recipe_ingredient(ingredient_id);

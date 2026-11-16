@@ -31,6 +31,12 @@ async function getJson(url) {
   return res.json();
 }
 
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
 /** 화면 아래 잠깐 뜨는 알림 */
 let toastTimer;
 function toast(message) {

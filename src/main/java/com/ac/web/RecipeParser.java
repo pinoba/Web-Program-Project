@@ -1,7 +1,10 @@
 package com.ac.web;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
@@ -11,12 +14,19 @@ import org.w3c.dom.NodeList;
  * 식약처 API(COOKRCP01) 의 레시피 한 건(XML 의 <row>)을 정제해서 Recipe 로 바꾼다.
  *
  * 데이터 문제와 처리 방법
- *  - 재료 문자열은 원문 그대로 저장 (상세 화면에서 줄 단위로 표시)
+ *  - 재료 문자열 형식이 제각각 (●, 그룹명 :, 줄바꿈, [1인분]) → 재료 이름만 뽑고 원문은 그대로 저장
  *  - 조리 단계 앞의 "1. " 번호와 끝의 영문 한 글자(a, b, c) → 제거
- *  - 표기 열량과 탄·단·지 환산 열량이 크게 다른 레시피 → kcalMismatch 표시
  */
 public class RecipeParser {
 
+    private static final Pattern BRACKET = Pattern.compile("\\[[^\\]]*\\]");          // [1인분]
+    private static final Pattern PAREN = Pattern.compile("\\([^)]*\\)?");             // (3/4모)
+    private static final Pattern BEFORE_DIGIT = Pattern.compile("^([^0-9]*)");        // 숫자 앞까지 = 재료명
+    private static final Pattern AMOUNT_WORD =
+            Pattern.compile("\\s*(약간|적당량|적량|조금|소량|한줌|한 줌|한꼬집|한 꼬집|기호에 맞게)\\s*$");
+    private static final Pattern GROUP_PREFIX =
+            Pattern.compile("^(주재료|부재료|재료|양념장|양념|소스|고명|드레싱)\\s+");
+    private static final Pattern HAS_LETTER = Pattern.compile("[가-힣A-Za-z]");
     private static final Pattern STEP_NUMBER = Pattern.compile("^\\s*\\d+\\s*[.)]\\s*");
     private static final Pattern STEP_TAIL = Pattern.compile("(?<=[^A-Za-z0-9\\s])\\s*[A-Za-z]$");
 
@@ -37,7 +47,6 @@ public class RecipeParser {
         r.setImgMain(text(row, "ATT_FILE_NO_MAIN"));
         r.setPartsRaw(text(row, "RCP_PARTS_DTLS"));
         r.setTip(text(row, "RCP_NA_TIP"));
-        r.setKcalMismatch(isKcalMismatch(r.getKcal(), r.getCalcKcal()));
 
         List<String> steps = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
@@ -48,6 +57,41 @@ public class RecipeParser {
         return r;
     }
 
+    /** 재료 원문에서 재료 이름만 추출 (중복 제거, 순서 유지) */
+    public static List<String> parseIngredientNames(String raw) {
+        Set<String> names = new LinkedHashSet<>();
+        if (raw == null) return new ArrayList<>(names);
+
+        for (String line : raw.replace("●", "\n").split("\\r?\\n")) {
+            line = BRACKET.matcher(line).replaceAll(" ").trim();
+            if (line.isEmpty()) continue;
+
+            int colon = line.lastIndexOf(':');
+            if (colon >= 0) {
+                line = line.substring(colon + 1);          // "조림장 : 감자전분 6g" → 그룹명 제거
+            } else if (line.indexOf(',') < 0 && !line.matches(".*\\d.*")) {
+                continue;                                   // "고명", 요리 이름 같은 제목 줄
+            }
+
+            for (String token : line.split("[,，]")) {
+                String name = cleanIngredient(token);
+                if (name != null) names.add(name);
+            }
+        }
+        return new ArrayList<>(names);
+    }
+
+    private static String cleanIngredient(String token) {
+        String t = PAREN.matcher(token).replaceAll(" ");
+        Matcher m = BEFORE_DIGIT.matcher(t);
+        t = m.find() ? m.group(1) : t;                     // "연두부 75g" → "연두부 "
+        t = AMOUNT_WORD.matcher(t.trim()).replaceAll("");    // "소금 약간" → "소금"
+        t = GROUP_PREFIX.matcher(t.trim()).replaceAll("");   // "재료 곤약" → "곤약"
+        t = t.replaceAll("^[-·•*\\s]+|[-·•*.\\s]+$", "").replaceAll("\\s+", " ");
+        if (t.isEmpty() || t.length() > 20 || !HAS_LETTER.matcher(t).find()) return null;
+        return t;
+    }
+
     /** "1. 두부를 썬다.a" → "두부를 썬다." */
     public static String cleanStep(String raw) {
         if (raw == null) return "";
@@ -55,13 +99,6 @@ public class RecipeParser {
         s = STEP_NUMBER.matcher(s).replaceFirst("");
         s = STEP_TAIL.matcher(s).replaceFirst("");
         return s.trim();
-    }
-
-    /** 표기 열량과 환산 열량의 차이가 50kcal 이상이면서 30% 이상이면 이상치로 본다 */
-    public static boolean isKcalMismatch(double kcal, double calcKcal) {
-        if (kcal <= 0) return false;
-        double diff = Math.abs(kcal - calcKcal);
-        return diff >= 50 && diff >= kcal * 0.3;
     }
 
     /** <row> 안의 태그 글자 (없으면 "") */

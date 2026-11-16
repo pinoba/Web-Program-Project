@@ -76,11 +76,11 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 .icon-btn:hover { background: var(--danger-weak); color: var(--danger); }
 
 .field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: var(--ink-2); margin-bottom: 14px; }
-.field input, .field select, .sort-box select {
+.field input, .field select, .sort-box select, .ac-wrap input {
   font: inherit; font-weight: 400; color: var(--ink); padding: 10px 12px;
   border: 1px solid var(--line); border-radius: 10px; background: var(--surface); outline: none; width: 100%;
 }
-.field input:focus, .field select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-weak); }
+.field input:focus, .field select:focus, .ac-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-weak); }
 .inline-row { display: flex; gap: 8px; }
 .inline-row input { flex: 1; }
 .form-msg { font-size: 13px; margin: -6px 0 12px; min-height: 0; }
@@ -94,6 +94,7 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 /* ---------- 칩 ---------- */
 .chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 .chip-cat { background: rgba(255, 255, 255, .92); color: var(--ink-2); position: absolute; left: 10px; top: 10px; }
+.chip-ing { background: var(--primary-weak); color: var(--primary-dark); }
 .chip-tag { background: var(--bg); color: var(--ink-2); border: 1px solid var(--line); margin-top: 10px; }
 .chip-tag:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -117,6 +118,14 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
   font-weight: 600; color: var(--ink-2);
 }
 .cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+.ingredient-cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 640px;
+  background: var(--ink); color: #fff; padding: 14px 20px; border-radius: 12px;
+}
+.ingredient-cta strong { margin-right: 8px; }
+.ingredient-cta span { color: #ddd5cc; }
+.ingredient-cta strong, .ingredient-cta .arrow { color: #fff; }
+.ingredient-cta:hover { background: #3d3630; }
 .notice { background: var(--primary-weak); border: 1px solid #ffd8bf; padding: 16px 20px; border-radius: 12px; }
 .notice a { color: var(--primary); font-weight: 700; text-decoration: underline; }
 
@@ -141,6 +150,8 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .card-title { font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .card-kcal { margin: 0; color: var(--primary); font-weight: 700; font-size: 14px; }
+.matched { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 6px; }
+.matched-label { font-size: 12px; color: var(--muted); margin-right: 2px; }
 
 /* ---------- 검색 결과 ---------- */
 .search-layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: start; }
@@ -162,6 +173,27 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 .paging .current { background: var(--primary); color: #fff; font-weight: 700; }
 .paging .disabled { color: #ccc; }
 .paging .dots { color: var(--muted); }
+
+/* ---------- 재료로 검색 ---------- */
+.ing-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 32px; margin-bottom: 32px; }
+.ing-panel h1 { font-size: 24px; margin-bottom: 4px; }
+.ing-panel > .muted { margin: 0 0 20px; }
+.ing-input-row { display: flex; gap: 8px; max-width: 560px; }
+.ac-wrap { position: relative; flex: 1; }
+.ac-wrap input { font-size: 16px; padding: 12px 14px; }
+.ac-list {
+  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 5; list-style: none; margin: 0; padding: 6px;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); max-height: 280px; overflow-y: auto;
+}
+.ac-list li { padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+.ac-list li.active, .ac-list li:hover { background: var(--primary-weak); color: var(--primary-dark); }
+.ac-list li mark { background: none; color: var(--primary); font-weight: 700; }
+.ac-list .ac-empty { color: var(--muted); cursor: default; background: none !important; }
+.tag-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; min-height: 8px; }
+.tag { display: inline-flex; align-items: center; gap: 2px; padding: 6px 6px 6px 14px; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 600; font-size: 14px; }
+.tag-x { border: 0; background: transparent; color: #cfc6bd; font-size: 17px; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; line-height: 1; }
+.tag-x:hover { background: rgba(255, 255, 255, .15); color: #fff; }
+#ingMsg { margin-top: 10px; }
 
 /* ---------- 음식 상세 ---------- */
 .detail-head { display: grid; grid-template-columns: 360px 1fr; gap: 32px; align-items: center; margin-bottom: 28px; }
@@ -198,7 +230,6 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 .nutri-pct { text-align: right; color: var(--muted); font-weight: 600; font-size: 14px; }
 .nutri-row.over .bar-fill { background: var(--danger); }
 .nutri-row.over .nutri-pct, .nutri-row.over .nutri-value { color: var(--danger); }
-.warn-note { margin: 18px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--danger-weak); color: var(--danger); font-size: 13px; }
 .ref-note { margin: 14px 0 0; }
 
 

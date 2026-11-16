@@ -16,9 +16,9 @@ public class Recipe extends Nutrition {
     private String imgMain;
     private String partsRaw;
     private String tip;
-    private boolean kcalMismatch;
 
     private List<String> steps = new ArrayList<>();          // 상세: 조리 순서
+    private List<String> matchedIngredients = new ArrayList<>(); // 재료로 검색: 포함 재료
 
     /** 화면 표시용 요리종류 (국&찌개 → 국·찌개) */
     public String getCategoryLabel() {
@@ -54,8 +54,8 @@ public class Recipe extends Nutrition {
     public void setPartsRaw(String partsRaw) { this.partsRaw = partsRaw; }
     public String getTip() { return tip; }
     public void setTip(String tip) { this.tip = tip; }
-    public boolean isKcalMismatch() { return kcalMismatch; }
-    public void setKcalMismatch(boolean kcalMismatch) { this.kcalMismatch = kcalMismatch; }
     public List<String> getSteps() { return steps; }
     public void setSteps(List<String> steps) { this.steps = steps; }
+    public List<String> getMatchedIngredients() { return matchedIngredients; }
+    public void setMatchedIngredients(List<String> matchedIngredients) { this.matchedIngredients = matchedIngredients; }
 }

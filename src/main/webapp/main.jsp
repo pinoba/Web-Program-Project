@@ -22,6 +22,11 @@
       <a class="cat-btn" href="${catUrl}"><c:out value="${fn:replace(cat, '&', '·')}" /></a>
     </c:forEach>
   </div>
+
+  <a class="ingredient-cta" href="${ctx}/ingredient">
+    <span><strong>냉장고 재료로 검색</strong> 가진 재료를 넣으면 만들 수 있는 레시피를 찾아드려요</span>
+    <span class="arrow">→</span>
+  </a>
 </section>
 
 <c:choose>

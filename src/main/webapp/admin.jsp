@@ -26,7 +26,7 @@
   <%-- 적재 결과 --%>
   <table class="result-table">
     <thead>
-      <tr><th>전체</th><th>신규 저장</th><th>갱신</th><th>실패</th><th>열량 이상치</th></tr>
+      <tr><th>전체</th><th>신규 저장</th><th>갱신</th><th>실패</th></tr>
     </thead>
     <tbody>
       <tr>
@@ -34,11 +34,9 @@
         <td id="stInserted">${inserted}</td>
         <td id="stUpdated">${updated}</td>
         <td id="stFailed">${failed}</td>
-        <td id="stMismatch">${mismatch}</td>
       </tr>
     </tbody>
   </table>
-  <p class="muted small">열량 이상치: 표기 열량과 탄수화물·단백질·지방 환산 열량의 차이가 큰 레시피 (상세 화면에 안내 문구 표시)</p>
 </section>
 
 <%@ include file="inc/footer.jsp" %>

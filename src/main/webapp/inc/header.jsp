@@ -24,6 +24,7 @@
       <button type="submit" aria-label="검색">검색</button>
     </form>
     <nav class="topnav">
+      <a href="${ctx}/ingredient">재료로 검색</a>
       <c:choose>
         <c:when test="${not empty me}">
           <c:if test="${me.admin}"><a href="${ctx}/admin" class="nav-admin">관리자</a></c:if>

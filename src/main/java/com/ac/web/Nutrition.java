@@ -57,11 +57,6 @@ public class Nutrition implements Serializable {
         return rows;
     }
 
-    /** 탄수화물·단백질 4kcal/g, 지방 9kcal/g 으로 환산한 열량 */
-    public double getCalcKcal() {
-        return carb * 4 + protein * 4 + fat * 9;
-    }
-
     public double getKcal() {
         return kcal;
     }

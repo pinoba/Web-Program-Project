@@ -56,7 +56,6 @@ public class AdminServlet extends HttpServlet {
         request.setAttribute("inserted", RecipeLoader.getInserted());
         request.setAttribute("updated", RecipeLoader.getUpdated());
         request.setAttribute("failed", RecipeLoader.getFailed());
-        request.setAttribute("mismatch", RecipeLoader.getMismatch());
         RequestDispatcher dispatcher = request.getRequestDispatcher("/admin.jsp");
         dispatcher.forward(request, response);
     }
