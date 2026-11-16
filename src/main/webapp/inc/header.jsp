@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="${ctx}/css/style.css">
 </head>
-<body data-ctx="${ctx}" data-login="${not empty me}">
+<body data-ctx="${ctx}">
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a class="logo" href="${ctx}/main">밥<span>심</span></a>

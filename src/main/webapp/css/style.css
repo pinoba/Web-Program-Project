@@ -67,13 +67,10 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 .btn-outline { background: var(--surface); border-color: var(--line); color: var(--ink); }
 .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 .btn-outline.is-on { border-color: var(--primary); color: var(--primary); background: var(--primary-weak); }
-.btn-done { background: var(--ok-weak); color: var(--ok); border-color: #b2f2bb; }
 .btn-ghost { background: transparent; color: var(--ink-2); border-color: var(--line); }
 .btn-ghost:hover { background: var(--surface); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 6px 12px; font-size: 13px; }
-.icon-btn { border: 0; background: transparent; width: 32px; height: 32px; border-radius: 8px; font-size: 20px; color: var(--muted); cursor: pointer; }
-.icon-btn:hover { background: var(--danger-weak); color: var(--danger); }
 
 .field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: var(--ink-2); margin-bottom: 14px; }
 .field input, .field select, .sort-box select, .ac-wrap input {
@@ -230,7 +227,6 @@ h1, h2, h3 { margin: 0; line-height: 1.3; }
 .nutri-pct { text-align: right; color: var(--muted); font-weight: 600; font-size: 14px; }
 .nutri-row.over .bar-fill { background: var(--danger); }
 .nutri-row.over .nutri-pct, .nutri-row.over .nutri-value { color: var(--danger); }
-.ref-note { margin: 14px 0 0; }
 
 
 /* ---------- 로그인·회원가입 ---------- */

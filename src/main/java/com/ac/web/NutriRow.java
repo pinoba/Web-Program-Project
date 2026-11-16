@@ -3,7 +3,6 @@ package com.ac.web;
 /** 영양 막대 한 줄 (예: 단백질 3.1g, 기준치 대비 6%) — JSP 에서 c:forEach 로 출력 */
 public class NutriRow {
 
-    private String key;    // kcal, carb, protein, fat, sodium (JS 갱신용)
     private String label;  // 열량, 탄수화물 ...
     private double value;
     private String unit;   // kcal, g, mg
@@ -11,8 +10,7 @@ public class NutriRow {
 
     public NutriRow() {}
 
-    public NutriRow(String key, String label, double value, String unit, int pct) {
-        this.key = key;
+    public NutriRow(String label, double value, String unit, int pct) {
         this.label = label;
         this.value = value;
         this.unit = unit;
@@ -29,12 +27,6 @@ public class NutriRow {
         return Math.min(pct, 100);
     }
 
-    public String getKey() {
-        return key;
-    }
-    public void setKey(String key) {
-        this.key = key;
-    }
     public String getLabel() {
         return label;
     }

@@ -49,11 +49,11 @@ public class Nutrition implements Serializable {
     /** 영양 막대 5줄 */
     public List<NutriRow> getRows() {
         List<NutriRow> rows = new ArrayList<>();
-        rows.add(new NutriRow("kcal", "열량", kcal, "kcal", getKcalPct()));
-        rows.add(new NutriRow("carb", "탄수화물", carb, "g", getCarbPct()));
-        rows.add(new NutriRow("protein", "단백질", protein, "g", getProteinPct()));
-        rows.add(new NutriRow("fat", "지방", fat, "g", getFatPct()));
-        rows.add(new NutriRow("sodium", "나트륨", sodium, "mg", getSodiumPct()));
+        rows.add(new NutriRow("열량", kcal, "kcal", getKcalPct()));
+        rows.add(new NutriRow("탄수화물", carb, "g", getCarbPct()));
+        rows.add(new NutriRow("단백질", protein, "g", getProteinPct()));
+        rows.add(new NutriRow("지방", fat, "g", getFatPct()));
+        rows.add(new NutriRow("나트륨", sodium, "mg", getSodiumPct()));
         return rows;
     }
 
