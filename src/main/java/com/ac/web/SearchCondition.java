@@ -26,7 +26,9 @@ public class SearchCondition {
         c.sodiumMax = allowed(parseInt(req.getParameter("sodium"), 0), 300, 600, 1000);
         String s = trim(req.getParameter("sort"));
         c.sort = (s.equals("kcal") || s.equals("protein") || s.equals("name")) ? s : "";
-        c.page = Math.max(1, parseInt(req.getParameter("page"), 1));
+        // 페이지 번호는 5자리까지만 허용 (너무 큰 값은 OFFSET 계산이 int 범위를 넘어 오류가 남)
+        String p = trim(req.getParameter("page"));
+        c.page = p.matches("\\d{1,5}") ? Math.max(1, Integer.parseInt(p)) : 1;
         return c;
     }
 
