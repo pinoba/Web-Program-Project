@@ -23,9 +23,8 @@ Maven 웹 프로젝트 · Tomcat 9 (javax.servlet) · Servlet + JSP(EL, JSTL) ·
 bapsim
 ├─ pom.xml                       JSTL 1.2, H2
 ├─ src/main/java/com/ac/web      자바 클래스 전부 (한 패키지)
-│   ├─ 서블릿(컨트롤)   InitServlet MainServlet SearchServlet IngredientServlet IngredientSuggestServlet
-│   │                  RecipeServlet FavoriteApiServlet
-│   │                  LoginServlet JoinServlet IdCheckServlet LogoutServlet MypageServlet AdminServlet
+│   ├─ 서블릿(컨트롤)   InitServlet MainServlet SearchServlet IngredientServlet RecipeServlet
+│   │                  FavoriteApiServlet MemberServlet MypageServlet AdminServlet
 │   ├─ 자바빈(모델)     Member Recipe Nutrition NutriRow Paging SearchCondition
 │   ├─ DB 처리         DBUtil MemberDAO RecipeDAO IngredientDAO FavoriteDAO RecipeSaveDAO
 │   └─ 기타            Config RecipeParser RecipeLoader PasswordUtil JsonUtil
@@ -51,12 +50,12 @@ bapsim
 | `/` `/main` | MainServlet → main.jsp | 메인 (랜덤·저칼로리 추천) | - |
 | `/search` | SearchServlet → search.jsp | 음식 종류 (검색·필터·정렬·페이징) | - |
 | `/ingredient` | IngredientServlet → ingredient.jsp | 재료로 검색 | - |
-| `/api/ingredients` | IngredientSuggestServlet | 재료 자동완성 (AJAX) | - |
+| `/api/ingredients` | IngredientServlet | 재료 자동완성 (AJAX) | - |
 | `/recipe?id=` | RecipeServlet → recipe.jsp | 음식 상세 + 최근 본 레시피(세션) 기록 | - |
 | `/api/favorite` | FavoriteApiServlet | 즐겨찾기 저장·해제 (AJAX) | 필요 |
-| `/login` `/join` | LoginServlet, JoinServlet → login.jsp, join.jsp | 로그인·회원가입 | - |
-| `/logout` | LogoutServlet | 로그아웃 (세션 종료) | - |
-| `/api/idcheck` | IdCheckServlet | 아이디 중복 확인 (AJAX) | - |
+| `/login` `/join` | MemberServlet → login.jsp, join.jsp | 로그인·회원가입 | - |
+| `/logout` | MemberServlet | 로그아웃 (세션 종료) | - |
+| `/api/idcheck` | MemberServlet | 아이디 중복 확인 (AJAX) | - |
 | `/mypage` | MypageServlet → mypage.jsp | 즐겨찾기·최근 본 레시피 | 필요 |
 | `/admin` `/admin/load` `/admin/status` | AdminServlet → admin.jsp | 적재 화면·실행·진행 상황 | 관리자 |
 
